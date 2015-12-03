@@ -180,6 +180,10 @@ header {
   background: #225378; /*Dark Blue*/
   border-color: #EB7F00; /*Orange*/
 }
+#project {
+  background: #da1f28; /*Wells Fargo Red*/
+  border-color: #f0c500; /*Wells Fargo Yellow*/
+}
 /* logo text */
 h1, h2 {
   color: #ffffff;
