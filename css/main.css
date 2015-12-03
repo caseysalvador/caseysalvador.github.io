@@ -180,13 +180,18 @@ header {
   background: #225378; /*Dark Blue*/
   border-color: #EB7F00; /*Orange*/
 }
+/*Project.html*/
 #project {
   background: #da1f28; /*Wells Fargo Red*/
   border-color: #f0c500; /*Wells Fargo Yellow*/
 }
 
 #navigation a{
-  color: #f0c500; /*LighterBlue*/
+  color: #f0c500; /*Wells Fargo Yellow*/
+}
+/* selected nav link Project.html*/
+#navigation a.selected, #navigation a:hover {
+  color: #fff;
 }
 
 /* logo text */
