@@ -184,6 +184,11 @@ header {
   background: #da1f28; /*Wells Fargo Red*/
   border-color: #f0c500; /*Wells Fargo Yellow*/
 }
+
+#navigation a{
+  color: #f0c500; /*LighterBlue*/
+}
+
 /* logo text */
 h1, h2 {
   color: #ffffff;
