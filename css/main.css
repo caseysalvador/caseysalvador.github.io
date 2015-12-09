@@ -180,7 +180,7 @@ P A G E: P R O J E C T
   text-align: center;
 }
 .socialmediaimg {
-  border-radius: 25px;
+  border-radius: 15px 50px;
 }
 pre, code{
   direction: ltr;
