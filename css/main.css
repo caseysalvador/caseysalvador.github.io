@@ -167,6 +167,28 @@ P A G E: C O N T A C T
 }
 
 /***********************
+P A G E: P R O J E C T
+***********************/
+
+pre, code{
+  direction: ltr;
+  text-align: left;
+}
+
+code {
+  font-size: .7em;
+}
+ 
+pre {
+    border: solid 1px yellow;
+    white-space: pre-wrap;
+    color: red;
+    margin: 10px;
+    padding: 10px;
+    background: hsl(0,0%,90%);
+}
+
+/***********************
 C O L O R
 ***********************/
 
