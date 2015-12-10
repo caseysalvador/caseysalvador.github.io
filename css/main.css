@@ -189,7 +189,6 @@ code {
 }
  
 pre {
-    border: solid 1px yellow;
     white-space: pre-wrap;
     color: red;
     margin: 10px;
