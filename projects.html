@@ -33,11 +33,11 @@
 
         <h1 class="projecth1">A Plan for Action for Social Media Response</h1><br>
 
-        <h4 class="projecth4">/ About</h4>
+        <h4 class="projecth4"> ~ About</h4>
 
         <p>Welcome! I'm Casey Salvador, undergraduate of the College of Charleston. This portion is dedicated to provide information about the Wells Fargo Analytics competition for DATA 101. Enjoy and feel free to navigate the following sections, which provides information on the project. Please feel free as well to contact me via my contacts page.</p>
 
-        <h4 class="projecth4">/ Challenge</h4>
+        <h4 class="projecth4"> ~ Challenge</h4>
 
         <p>Dialogues on social media can provide tremendous insight into the behaviors, desires, pains, and thoughts of consumers. We'd like your help in developing a repeatable process that identifies, classifies, and extracts the underlying drivers of consumer financial conversations and comments in social media data.
         <br>
@@ -45,27 +45,116 @@
 
         <img src="../img/socialmedialogos.jpg" height="200" width="500"><br>
 
-        <h4 class="projecth4"> 1 Preparing the Data</h4>
-        <p>Wells Fargo has given us 220,377 social media data. With this data, we had to obtain useful information that would be helpful in answering the 2 questions set forth from the Wells Fargo Data Competition. The language of choice for this competition was R. We uploaded the necessary data using RStudio as our choice of IDE. We have observed the type of data we are to be working with and found that we were working with both Facebook and Twitter comments and posts. The pre-process portion was to remove unnecessary data. Unnecessary data consisted of removal of spaces, specific words and non associated posts and comments from the two social media platforms. During this time, we sample roughly 10,000 observations to decrease the number of observations of 220,377 that we had to work with when organizing the data. We have orgranized the data by bank as well as relevant and non-relevant terms using semantic analysis.</p>
+        <h4 class="projecth4"> ~ Describe Your Approach and Methodology</h4>
+
+        <h4 class="projecth4"> ~ Preparing the Data</h4>
+        <p>Wells Fargo has given us 220,377 social media data. With this data, we had to obtain useful information that would be helpful in answering the 2 questions set forth from the Wells Fargo Data Competition. The language of choice for this competition was R. We uploaded the necessary data using RStudio as our choice of IDE. We have observed the type of data we are to be working with and found that we were working with both Facebook and Twitter comments and posts. The pre-process portion was to remove unnecessary data. Unnecessary data consisted of removal of spaces, specific words and non associated posts and comments from the two social media platforms. During this time, we sample roughly 10,000 observations to decrease the number of observations of 220,377 that we had to work with when organizing the data. We have orgranized the data by bank as well as relevant and non-relevant terms using sentiment analysis.</p>
 
         <img src="../img/FlowChart.png"><br>
 
-        <h4 class="projecth4"> 2 Approach and Methodology</h4>
+        <h4 class="projecth4"> ~ Discuss the Data and its Relationship to Social Conversation Drivers</h4>
 
-        <p><i>Deliverable A - Describe your Approach and Methodology. Include a visual representation of your analytic process flow.</i>
+        <p>
+        Investigate the social conversation drives using the data provided. After retrieving the postive and negative sentiment phrases and words, we have identified conversation drivers such as customer service, account issues. This data provided is key to providing an idea of what can be considered as a social driver for these banks.
+        </p>
+ 
+        <h4 class="projecth4"> ~ Document your Code and Reference the Analytic Process Flow-Diagram</h4>
+
+        <pre>
+          <code>
+# Load data set, in my case ('df.Rda')
+load("/Users/Casey/Downloads/df.Rda")
+df$FullText = as.character(df$FullText)
+
+# Grab just the texts, so you can load them in the Corpus
+df.texts = as.data.frame(df[,ncol(df)])
+colnames(df.texts) = 'FullText'
+
+# Remove non-ascii characters
+df.texts.clean = as.data.frame(iconv(df.texts$FullText, "latin1", 
+                                     "ASCII", sub=""))
+colnames(df.texts.clean) = 'FullText'
+
+df$FullText = df.texts.clean$FullText
+
+# To test on 10000 samples using df.10000
+idx.10000 = sample(1:nrow(df),10000)
+df.10000 = df[idx.10000,]
+
+df.entire = df
+df = df.10000
+
+# Load in corpus form using the tm library
+library(tm) 
+docs <- Corpus(DataframeSource(as.data.frame(df[,6])))   
+
+# Perform pre-processing
+docs <- tm_map(docs, PlainTextDocument)
+docs <- tm_map(docs, removePunctuation)
+docs <- tm_map(docs, stripWhitespace)
+docs <- tm_map(docs, removeWords,c("Name","and","for")) 
+docs <- tm_map(docs, removeWords, stopwords("english"))
+docs <- tm_map(docs, removeWords, stopwords(kind="SMART"))
+
+save.image('docs.preprocessed.Rda')
+load('docs.preprocessed.Rda')
+
+# Documents containing each bank
+bankA.idx = which(sapply(df$FullText,function(x) grepl("BankA",x)))
+bankB.idx = which(sapply(df$FullText,function(x) grepl("BankB",x)))
+bankC.idx = which(sapply(df$FullText,function(x) grepl("BankC",x)))
+bankD.idx = which(sapply(df$FullText,function(x) grepl("BankD",x)))
+
+df$BankID = vector(mode="numeric", length = nrow(df))
+df$BankID[bankA.idx] = "BankA"
+df$BankID[bankB.idx] = "BankB"
+df$BankID[bankC.idx] = "BankC"
+df$BankID[bankD.idx] = "BankD"
+
+bankA.docs = docs[bankA.idx]
+bankB.docs = docs[bankB.idx]
+bankC.docs = docs[bankC.idx]
+bankD.docs = docs[bankD.idx]
+
+summary(docs)
+
+## Repeat these processes for every bank
+## Create document term matrix
+dtm <- DocumentTermMatrix(docs[bankA.idx])
+
+## Transpose this matrix
+tdm <- TermDocumentMatrix(docs[bankA.idx])
+
+## Remove sparse terms
+dtm = removeSparseTerms(dtm, 0.98)
+
+## Organize terms by frequency
+findFreqTerms(dtm,50)
+freq <- colSums(as.matrix(dtm))  
+ord <- order(freq)   
+freq[head(ord)]  
+freq[tail(ord)]
+
+wf <- data.frame(word=names(freq), freq=freq)   
+head(wf)
+          </code>
+        </pre>
+
+        <h4 class="projecth4"> ~ Create a List of Topics and Substance</h4>
         <br>
-        Once we prepared the tweets and posts for analysis, we used an agile methodology so we could test 
+        <li>
+          <ul>Account</ul>
+          <ul>ATM</ul>
+          <ul>Check</ul>
+          <ul>Customer Service</ul>
+          <ul>Credit</ul>
+          <ul>Grants</ul>
+          <ul>Management</ul>
+          <ul>Phone Calls</ul>
+        </li>
         <br>
-        small amounts of data at a time to quicken the process, that would be representative of things we could 
-        <br>
-        get when testing the entire data set.  
-        <br>
-        An agile methodology was chosen so the many questions could be answered and so methods could be repeated and compared for each bank. Through a process, we tested 1000 random samples of the entire data set and then 1000 random samples of only bank A to compare and contrast differences.
-        <br>
-        Below, find a graphical representation of the analytic and developmental approach taken.  It will show first cleaning the data where the team got rid of any additional room that was taking up space. The team then tested the data overall to find positive and negative sentiment words as well as high frequency words.  This gave us the framework to look at the data as a whole before looking into the context of each bank.  This step also allowed for the creation of two separate files for negative and positive posts.  
-        <br>
-        The team indexed each bank to then replicate the tests: positive and negative as well as word 
-        <br>
+
+
         frequency. 
         <br>
         The results were then tested against the results as a whole.
@@ -78,6 +167,8 @@
       <section id="secondary">
 
       <img src="../img/socialmediatree.png" width="300"><br>
+
+      <h3 class="projecth3">Narrative Insight</h3>
 
        <img src="../img/wordcloud.png" height="300" width="300"><br>
        <h3 class="projecth3">Word Cloud</h3>
@@ -103,6 +194,18 @@ docs <- tm_map(docs, removeWords, stopwords(kind="SMART"))
 
 dtm <- DocumentTermMatrix(docs)
 tdm <- TermDocumentMatrix(docs)
+          </code>
+        </pre>
+
+        <h3 class="projecth3">K-Means Clustering</h3>
+       <pre>
+          <code>
+#K-Means Clustering
+library(fpc)
+library(cluster)   
+d <- dist(t(m2), method="euclidian")
+kfit <- kmeans(d, 2)   
+clusplot(as.matrix(d), kfit$cluster, color=T, shade=T, labels=2, lines=0)
           </code>
         </pre>
 

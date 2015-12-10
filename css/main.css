@@ -178,6 +178,7 @@ P A G E: P R O J E C T
 .projecth3 {
   color: #da1f28;
   text-align: center;
+  text-decoration: underline;
 }
 pre, code{
   direction: ltr;
