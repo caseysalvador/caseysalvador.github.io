@@ -211,13 +211,15 @@ tdm <- TermDocumentMatrix(docs)
           </code>
         </pre>
 
+        <img src="../img/KMeansClusterplot.png" height="300" width="300"><br>
+
         <h3 class="projecth3">K-Means Clustering</h3>
        <pre>
           <code>
 #K-Means Clustering
 library(fpc)
-library(cluster)   
-d <- dist(t(m2), method="euclidian")
+library(cluster)
+d <- dist(t(dtm), method="euclidian")
 kfit <- kmeans(d, 2)   
 clusplot(as.matrix(d), kfit$cluster, color=T, shade=T, labels=2, lines=0)
           </code>
