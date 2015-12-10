@@ -91,6 +91,21 @@ wordcloud(names(freq), freq, max.words=25, rot.per=0.2, colors=dark2)
           </code>
         </pre>
 
+        <img src="../img/Dendrogram.png" height="300" width="300"><br>
+
+        <h3 class="projecth3">Dendrograph</h3>
+       <pre>
+          <code>
+##Cluster Dendrogram
+docs <- tm_map(docs, removeWords,c("Name", "and","for", "name", "this", "are","from", "just", "get", "ret_twit", "name_resp", "twit_hndl", "twit_handl:", "twit_hndl_banka","ly/")) 
+docs <- tm_map(docs, removeWords, stopwords("english"))
+docs <- tm_map(docs, removeWords, stopwords(kind="SMART"))
+
+dtm <- DocumentTermMatrix(docs)
+tdm <- TermDocumentMatrix(docs)
+          </code>
+        </pre>
+
       </section>
 
       <footer>
